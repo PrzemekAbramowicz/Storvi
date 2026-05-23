@@ -15,6 +15,9 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 
 const formSchema = z.object({
     username: z.string().min(2).max(50),
@@ -23,6 +26,9 @@ const formSchema = z.object({
 type FormType = "sign-in" | "sign-up";
 
 const AuthForm = ({ type }: { type: FormType }) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -31,7 +37,18 @@ const AuthForm = ({ type }: { type: FormType }) => {
     });
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log(values);
+        setIsLoading(true);
+        setErrorMessage("");
+
+        try {
+            // Simulate an API call
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            console.log(values);
+        } catch (error) {
+            setErrorMessage("An error occurred. Please try again.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -56,19 +73,22 @@ const AuthForm = ({ type }: { type: FormType }) => {
                                         <FormLabel className="shad-form-label">
                                             Full Name
                                         </FormLabel>
-                                        <FormLabel>
+
+                                        <FormControl>
                                             <Input
-                                                className="shad-input"
                                                 placeholder="Enter your full name"
+                                                className="shad-input"
                                                 {...field}
                                             />
-                                        </FormLabel>
+                                        </FormControl>
                                     </div>
+
                                     <FormMessage className="shad-form-message" />
                                 </FormItem>
                             )}
                         />
                     )}
+
                     <FormField
                         control={form.control}
                         name="email"
@@ -78,14 +98,16 @@ const AuthForm = ({ type }: { type: FormType }) => {
                                     <FormLabel className="shad-form-label">
                                         Email
                                     </FormLabel>
-                                    <FormLabel>
+
+                                    <FormControl>
                                         <Input
-                                            className="shad-input"
                                             placeholder="Enter your email"
+                                            className="shad-input"
                                             {...field}
                                         />
-                                    </FormLabel>
+                                    </FormControl>
                                 </div>
+
                                 <FormMessage className="shad-form-message" />
                             </FormItem>
                         )}
@@ -94,9 +116,39 @@ const AuthForm = ({ type }: { type: FormType }) => {
                     <Button
                         type="submit"
                         className="form-submit-button text-white"
+                        disabled={isLoading}
                     >
                         {type === "sign-in" ? "Sign In" : "Sign Up"}
+
+                        {isLoading && (
+                            <Image
+                                src="/assets/icons/loader.svg"
+                                alt="loader"
+                                width={24}
+                                height={24}
+                                className="ml-2 animate-spin"
+                            />
+                        )}
                     </Button>
+
+                    {errorMessage && (
+                        <p className="error-message text-red-500 mt-2">
+                            *{errorMessage}
+                        </p>
+                    )}
+                    <div className="body-2 flex justify-center">
+                        <p className="text-light-100">
+                            {type === "sign-in"
+                                ? "Don't have an account? "
+                                : "Already have an account? "}
+                        </p>
+                        <Link
+                            href={type === "sign-in" ? "/sign-up" : "/sign-in"}
+                            className="ml-1 font-medium text-brand"
+                        >
+                            {type === "sign-in" ? "Sign Up" : "Sign In"}
+                        </Link>
+                    </div>
                 </form>
             </Form>
             {/* OTP Verification */}
