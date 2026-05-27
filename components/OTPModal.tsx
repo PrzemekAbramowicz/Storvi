@@ -1,7 +1,8 @@
+"use client";
+
 import {
     AlertDialog,
     AlertDialogAction,
-    AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
     AlertDialogFooter,
@@ -15,11 +16,12 @@ import { Button } from "./ui/button";
 import {
     InputOTP,
     InputOTPGroup,
-    InputOTPSeparator,
     InputOTPSlot,
 } from "@/components/ui/input-otp";
 import React, { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { sendEmailOTP, verifySecret } from "@/lib/actions/user.actions";
 
 const OTPModal = ({
     accountId,
@@ -28,6 +30,7 @@ const OTPModal = ({
     accountId: string;
     email: string;
 }) => {
+    const router = useRouter();
     const [isOpen, setIsOpen] = useState(true);
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -37,23 +40,22 @@ const OTPModal = ({
         setIsLoading(true);
 
         try {
-            //Call API to verify OTP
-        } catch (error) {
-            console.log("Failed to verify OTP");
-        }
+            const sessionId = await verifySecret({ accountId, password });
 
-        setIsLoading(false);
+            if (sessionId) router.push("/");
+        } catch (error) {
+            console.log("Failed to verify OTP", error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleResendOTP = async () => {
-        //Call API to resend OTP
+        await sendEmailOTP({ email });
     };
 
     return (
         <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-            <AlertDialogTrigger asChild>
-                <Button variant="outline">Show Dialog</Button>
-            </AlertDialogTrigger>
             <AlertDialogContent className="shad-alert-dialog">
                 <AlertDialogHeader className="relative flex justify-center">
                     <AlertDialogTitle className="h2 text-center">
