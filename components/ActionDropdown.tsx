@@ -3,11 +3,9 @@
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog";
 
 import {
@@ -31,7 +29,7 @@ import { renameFile } from "@/lib/actions/file.actions";
 
 const ActionDropdown = ({ file }: { file: Models.Document }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isDropwodnOpen, setIsDropdownOpen] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [action, setAction] = useState<ActionType | null>(null);
     const [name, setName] = useState(file.name);
     const [isLoading, setIsLoading] = useState(false);
@@ -42,7 +40,27 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
         setIsDropdownOpen(false);
         setAction(null);
         setName(file.name);
+        setIsLoading(false);
         // setEmail()
+    };
+
+    const handleDialogOpenChange = (open: boolean) => {
+        setIsModalOpen(open);
+
+        if (!open) {
+            closeAllModals();
+        }
+    };
+
+    const handleDropdownAction = (actionItem: ActionType) => {
+        setAction(actionItem);
+        setIsDropdownOpen(false);
+
+        if (
+            ["rename", "share", "delete", "details"].includes(actionItem.value)
+        ) {
+            setIsModalOpen(true);
+        }
     };
 
     const handleAction = async () => {
@@ -123,9 +141,9 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
     };
 
     return (
-        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <Dialog open={isModalOpen} onOpenChange={handleDialogOpenChange}>
             <DropdownMenu
-                open={isDropwodnOpen}
+                open={isDropdownOpen}
                 onOpenChange={setIsDropdownOpen}
             >
                 <DropdownMenuTrigger className="shad-no-focus">
@@ -141,26 +159,14 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
                         {file.name}
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    {actionsDropdownItems.map((actionItem) => (
-                        <DropdownMenuItem
-                            key={actionItem.value}
-                            className="shad-dropdown-item"
-                            onClick={() => {
-                                setAction(actionItem);
-
-                                if (
-                                    [
-                                        "rename",
-                                        "share",
-                                        "delete",
-                                        "details",
-                                    ].includes(actionItem.value)
-                                ) {
-                                    setIsModalOpen(true);
-                                }
-                            }}
-                        >
-                            {actionItem.value === "download" ? (
+                    {actionsDropdownItems.map((actionItem) =>
+                        actionItem.value === "download" ? (
+                            <DropdownMenuItem
+                                key={actionItem.value}
+                                asChild
+                                className="shad-dropdown-item"
+                                onSelect={() => setIsDropdownOpen(false)}
+                            >
                                 <Link
                                     href={constructDownloadUrl(
                                         file.bucketFileId,
@@ -176,7 +182,15 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
                                     />
                                     {actionItem.label}
                                 </Link>
-                            ) : (
+                            </DropdownMenuItem>
+                        ) : (
+                            <DropdownMenuItem
+                                key={actionItem.value}
+                                className="shad-dropdown-item"
+                                onSelect={() =>
+                                    handleDropdownAction(actionItem)
+                                }
+                            >
                                 <div className="flex items-center gap-2">
                                     <Image
                                         src={actionItem.icon}
@@ -186,9 +200,9 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
                                     />
                                     {actionItem.label}
                                 </div>
-                            )}
-                        </DropdownMenuItem>
-                    ))}
+                            </DropdownMenuItem>
+                        ),
+                    )}
                 </DropdownMenuContent>
             </DropdownMenu>
             {renderDialogContent()}
