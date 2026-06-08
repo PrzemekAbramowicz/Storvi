@@ -24,7 +24,16 @@ const Search = () => {
             if (debouncedQuery.length === 0) {
                 setResults([]);
                 setOpen(false);
-                return router.push(path.replace(searchParams.toString(), ""));
+
+                if (searchQuery) {
+                    const params = new URLSearchParams(searchParams.toString());
+                    params.delete("query");
+
+                    const queryString = params.toString();
+                    router.push(queryString ? `${path}?${queryString}` : path);
+                }
+
+                return;
             }
 
             const files = await getFiles({
