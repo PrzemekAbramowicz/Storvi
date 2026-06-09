@@ -1,9 +1,25 @@
 # StorVi
 
+![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=nextdotjs)
+![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![Appwrite](https://img.shields.io/badge/Appwrite-Backend-FD366E?style=for-the-badge&logo=appwrite&logoColor=white)
+
 StorVi is a cloud storage web app for uploading, browsing, searching, sorting,
 sharing and managing files. It uses Appwrite for authentication, database
 records and file storage, while the frontend is built with Next.js, React,
 Tailwind CSS and shadcn/Radix UI primitives.
+
+## Tech Highlights
+
+- **Frontend:** Next.js 16 App Router, React 19, TypeScript
+- **Styling:** Tailwind CSS, shadcn-style components, Radix UI primitives
+- **Backend:** Appwrite Auth, Databases and Storage
+- **Forms and validation:** React Hook Form, Zod
+- **File handling:** React Dropzone, Appwrite Storage, custom file-type helpers
+- **Data visualization:** Recharts dashboard usage chart
+- **UX:** Sonner toasts, responsive sidebar/mobile navigation, OTP auth flow
 
 ## What You Can Do
 
@@ -19,16 +35,18 @@ Tailwind CSS and shadcn/Radix UI primitives.
 
 ## Tech Stack
 
-- Next.js 16 App Router
-- React 19
-- TypeScript
-- Tailwind CSS
-- Radix UI / shadcn-style components
-- Appwrite and node-appwrite
-- React Hook Form + Zod
-- React Dropzone
-- Recharts
-- Sonner toasts
+| Area          | Tools                                                  |
+| ------------- | ------------------------------------------------------ |
+| Framework     | Next.js 16 App Router                                  |
+| UI            | React 19, Radix UI, shadcn-style components            |
+| Language      | TypeScript                                             |
+| Styling       | Tailwind CSS, tailwind-merge, class-variance-authority |
+| Backend       | Appwrite, node-appwrite                                |
+| Auth          | Appwrite email OTP sessions with secure cookies        |
+| Forms         | React Hook Form, Zod                                   |
+| Uploads       | React Dropzone, Appwrite Storage                       |
+| Charts        | Recharts                                               |
+| Notifications | Sonner                                                 |
 
 ## Getting Started
 
